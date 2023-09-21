@@ -5,13 +5,13 @@ from data.base import MinibatchSampler
 from data.grss2013 import NewGRSS2013Dataset
 from data.salinas import NewSalinasDataset
 
-
+# 注册数据加载器，用于加载 Pavia 数据集
 @registry.DATALOADER.register('NewPaviaLoader')
-class NewPaviaLoader(DataLoader):
+class NewPaviaLoader(DataLoader): 
     def __init__(self, config):
-        self.config = dict()
-        self.set_defalut()
-        self.config.update(config)
+        self.config = dict() # 创建一个字典，用于存储配置信息
+        self.set_defalut() # 调用set_default函数，设置默认配置
+        self.config.update(config) # 更新配置信息
         for k, v in self.config.items():
             self.__dict__[k] = v
 

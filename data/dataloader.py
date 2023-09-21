@@ -14,10 +14,10 @@ class NewPaviaLoader(DataLoader):
         self.config.update(config) # 更新配置信息
         for k, v in self.config.items():
             self.__dict__[k] = v
-
+        # 创建Pavia数据集对象
         dataset = NewPaviaDataset(self.image_mat_path, self.gt_mat_path, self.training,
                                   self.num_train_samples_per_class, self.sub_minibatch)
-        sampler = MinibatchSampler(dataset)
+        sampler = MinibatchSampler(dataset)  # 创建小批量样本生成器
         super(NewPaviaLoader, self).__init__(dataset,
                                              batch_size=1,
                                              shuffle=False,
@@ -30,13 +30,14 @@ class NewPaviaLoader(DataLoader):
                                              worker_init_fn=None)
 
     def set_defalut(self):
+         # 设置默认配置信息
         self.config.update(dict(
             num_workers=0,
             image_mat_path='',
             gt_mat_path='',
             training=True,
             num_train_samples_per_class=200,
-            # mini-batch per class, if there are 10 categories, the total mini-batch is sub_minibatch * num_classes (10)
+            # mini-batch per class, if there are 10 categories, the total mini-batch is sub_minibatch * num_classes (10) # 每类别的小批量大小，如果有10个类别，则总小批量为 sub_minibatch * num_classes (10)
             sub_minibatch=10
         ))
 

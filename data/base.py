@@ -6,7 +6,7 @@ from torch.utils import data
 
 SEED = 2333
 
-
+# 整幅图像得到数据集？
 class FullImageDataset(dataset.Dataset):
     def __init__(self,
                  image,
@@ -16,13 +16,13 @@ class FullImageDataset(dataset.Dataset):
                  num_train_samples_per_class=200,
                  sub_minibatch=10,
                  ):
-        self.image = image
-        self.mask = mask
+        self.image = image # 图像数据
+        self.mask = mask # 掩码数据 # 是否为训练模式
         self.training = training
-        self.num_train_samples_per_class = num_train_samples_per_class
+        self.num_train_samples_per_class = num_train_samples_per_class # 每一个类别的训练样本数
         self.sub_minibatch = sub_minibatch
-        self._seed = np_seed
-        self._rs = np.random.RandomState(np_seed)
+        self._seed = np_seed #随机数种子
+        self._rs = np.random.RandomState(np_seed) # 创建随机状态对象
         # set list lenght = 9999 to make sure seeds enough
         self.seeds_for_minibatchsample = [e for e in self._rs.randint(low=2 << 31 - 1, size=9999)]
         self.preset()
@@ -86,7 +86,7 @@ class MinibatchSampler(data.Sampler):
     def __len__(self):
         return len(self.dataset)
 
-
+# 定义一个函数fixed_num_sample，用于生成训练集和测试集合样本的索引
 def fixed_num_sample(gt_mask: np.ndarray, num_train_samples, num_classes, seed=2333):
     """
 
@@ -99,10 +99,10 @@ def fixed_num_sample(gt_mask: np.ndarray, num_train_samples, num_classes, seed=2
     Returns:
         train_indicator, test_indicator
     """
-    rs = np.random.RandomState(seed)
+    rs = np.random.RandomState(seed)  # 创建随机状态对象
 
-    gt_mask_flatten = gt_mask.ravel()
-    train_indicator = np.zeros_like(gt_mask_flatten)
+    gt_mask_flatten = gt_mask.ravel() # 将输入数据展平
+    train_indicator = np.zeros_like(gt_mask_flatten) # 创建训练集和测试集的索引
     test_indicator = np.zeros_like(gt_mask_flatten)
     for i in range(1, num_classes + 1):
         inds = np.where(gt_mask_flatten == i)[0]

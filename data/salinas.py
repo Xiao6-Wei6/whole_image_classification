@@ -16,7 +16,7 @@ class NewSalinasDataset(FullImageDataset):
         self.im_mat_path = image_mat_path
         self.gt_mat_path = gt_mat_path
 
-        im_mat = loadmat(image_mat_path)
+        im_mat = loadmat(image_mat_path) #加载数据集
         image = im_mat['salinas_corrected']
         gt_mat = loadmat(gt_mat_path)
         mask = gt_mat['salinas_gt']

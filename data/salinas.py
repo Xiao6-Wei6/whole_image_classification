@@ -21,13 +21,16 @@ class NewSalinasDataset(FullImageDataset):
         gt_mat = loadmat(gt_mat_path)
         mask = gt_mat['salinas_gt']
 
+        # 计算高光谱图像的均值和标准差
         im_cmean = image.reshape((-1, image.shape[-1])).mean(axis=0)
         im_cstd = image.reshape((-1, image.shape[-1])).std(axis=0)
         self.vanilla_image = image
+        # 对高光谱图像进行均值和标准差归一化
         image = preprocess.mean_std_normalize(image, im_cmean, im_cstd)
         self.training = training
         self.num_train_samples_per_class = num_train_samples_per_class
         self.sub_minibatch = sub_minibatch
+        # 调用父类的初始化函数
         super(NewSalinasDataset, self).__init__(image, mask, training, np_seed=SEED,
                                                 num_train_samples_per_class=num_train_samples_per_class,
                                                 sub_minibatch=sub_minibatch)

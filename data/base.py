@@ -124,17 +124,19 @@ def minibatch_sample(gt_mask: np.ndarray, train_indicator: np.ndarray, minibatch
     """
 
     Args:
-        gt_mask: 2-D array of shape [height, width]
-        train_indicator: 2-D array of shape [height, width]
-        minibatch_size:
+        gt_mask: 2-D array of shape [height, width] 形状为 [height, width] 的2-D数组，表示掩码
+        train_indicator: 2-D array of shape [height, width]形状为 [height, width] 的2-D数组，表示训练集合索引
+        minibatch_size:子小批量的大小
 
     Returns:
 
     """
-    rs = np.random.RandomState(seed)
+    rs = np.random.RandomState(seed) # 创建随机状态对象
     # split into N classes
-    cls_list = np.unique(gt_mask)
+    cls_list = np.unique(gt_mask) # 获取掩码中的唯一类别列表
     inds_dict_per_class = dict()
+
+     # 为每个类别生成训练样本的索引
     for cls in cls_list:
         train_inds_per_class = np.where(gt_mask == cls, train_indicator, np.zeros_like(train_indicator))
         inds = np.where(train_inds_per_class.ravel() == 1)[0]
@@ -146,11 +148,12 @@ def minibatch_sample(gt_mask: np.ndarray, train_indicator: np.ndarray, minibatch
     cnt = 0
     while True:
         train_inds = np.zeros_like(train_indicator).ravel()
+        # 对每个类别的样本进行抽样
         for cls, inds in inds_dict_per_class.items():
             left = cnt * minibatch_size
             if left >= len(inds):
                 continue
-            # remain last batch though the real size is smaller than minibatch_size
+            # remain last batch though the real size is smaller than minibatch_size 保留最后一批，即使实际大小小于 minibatch_size
             right = min((cnt + 1) * minibatch_size, len(inds))
             fetch_inds = inds[left:right]
             train_inds[fetch_inds] = 1
